@@ -1,6 +1,5 @@
 /* style.css */
-/* Минимальные стили сетки с неоморфным подходом */
-/* Адаптивность: смартфон (до 768px) и планшет (768px+) */
+/* Неоморфный дизайн */
 
 /* Сброс отступов и box-sizing */
 *,
@@ -17,7 +16,6 @@ body {
     height: 100vh;
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--primary-background-color);
     overflow: hidden;
@@ -27,39 +25,31 @@ body {
 /* Светлая тема (по умолчанию) */
 body.light-theme {
     --primary-background-color: #EBF3FA;
-    --card-background-color: #ffffff;
+    --card-background-color: #EBF3FA;
     --primary-text-color: #2c3e50;
     --secondary-text-color: #5d6f7e;
-    --success-color: #2e7d73;
-    --success-bg: rgba(46, 125, 115, 0.1);
-    --danger-color: #d32f2f;
-    --danger-bg: rgba(211, 47, 47, 0.1);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --card-shadow: 0px 4px 20px -4px rgba(0, 0, 0, 0.1);
     --info-color: #1976d2;
-    --info-bg: rgba(25, 118, 210, 0.1);
-    --border-color: rgba(0, 0, 0, 0.05);
+    --icon-color-sun: #f39c12;
+    --icon-color-moon: #f1c40f;
     --neumo-shadow-dark: #d1d9e6;
     --neumo-shadow-light: #ffffff;
-    --warning-color: #f39c12;
-    --warning-bg: rgba(243, 156, 18, 0.1);
 }
 
 /* Темная тема */
 body.dark-theme {
     --primary-background-color: #31343c;
-    --card-background-color: #252b33;
+    --card-background-color: #31343c;
     --primary-text-color: #e4e6eb;
     --secondary-text-color: #b0b3b8;
-    --success-color: #4caf9e;
-    --success-bg: rgba(76, 175, 158, 0.15);
-    --danger-color: #f28b82;
-    --danger-bg: rgba(242, 139, 130, 0.15);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --card-shadow: 0px 4px 20px -4px rgba(0, 0, 0, 0.3);
     --info-color: #7aa2f7;
-    --info-bg: rgba(122, 162, 247, 0.15);
-    --border-color: rgba(255, 255, 255, 0.05);
+    --icon-color-sun: #f39c12;
+    --icon-color-moon: #f1c40f;
     --neumo-shadow-dark: #0f1215;
     --neumo-shadow-light: #2f3741;
-    --warning-color: #f1c40f;
-    --warning-bg: rgba(241, 196, 15, 0.15);
 }
 
 .container {
@@ -68,10 +58,32 @@ body.dark-theme {
     margin: 0 auto;
     padding: 2rem;
     background-color: transparent;
-    box-sizing: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+
+/* Хедер с датой и временем */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 3rem;
+}
+
+.time {
+    color: var(--primary-text-color);
+    font-size: 7rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 2px;
+}
+
+.today {
+    color: var(--secondary-text-color);
+    font-size: 2.4rem;
+    font-weight: 400;
 }
 
 /* Неоморфный переключатель темы */
@@ -104,45 +116,21 @@ body.dark-theme {
     transform: translateX(40px);
 }
 
-.theme-toggle .icon-sun,
-.theme-toggle .icon-moon {
+.theme-icon {
     position: absolute;
-    top: 7px;
-    width: 24px;
-    height: 24px;
-    z-index: 2;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.theme-toggle .icon-sun svg,
-.theme-toggle .icon-moon svg {
     width: 20px;
     height: 20px;
-    stroke: currentColor;
-    fill: none;
+    top: 9px;
+    left: 10px;
+    z-index: 2;
+    color: var(--icon-color-sun);
+    transition: all 0.3s ease;
+    pointer-events: none;
 }
 
-.theme-toggle .icon-sun {
-    left: 8px;
-    color: #f39c12;
-    opacity: 1;
-}
-
-.theme-toggle .icon-moon {
-    right: 8px;
-    color: #f1c40f;
-    opacity: 0;
-}
-
-.theme-toggle.dark .icon-sun {
-    opacity: 0;
-}
-
-.theme-toggle.dark .icon-moon {
-    opacity: 1;
+.theme-toggle.dark .theme-icon {
+    left: 50px;
+    color: var(--icon-color-moon);
 }
 
 /* Для темной темы */
@@ -156,68 +144,128 @@ body.dark-theme .theme-toggle::before {
     box-shadow: 3px 3px 6px #1a1e24, -3px -3px 6px #404854;
 }
 
-body.dark-theme .theme-toggle .icon-moon svg {
-    stroke: #f1c40f;
-}
-
-/* Хедер с датой и временем */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: transparent;
+/* Стандартная карточка */
+.card {
+    width: 100%;
+    height: 0;
+    padding: 1rem 1.5rem;
+    background-color: var(--card-background-color);
+    box-shadow: var(--card-shadow);
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color);
     flex-shrink: 0;
-    margin-bottom: 3rem;
 }
 
-.header-datetime {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
+.card.camera {
+    padding-bottom: 56.25%;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--primary-text-color);
 }
 
-.header-datetime .time {
-    font-size: 7rem;
-    font-weight: 300;
-    line-height: 1;
-    letter-spacing: 2px;
+/* Стили для чекбоксов-кнопок сценариев */
+.scenario-item {
+    display: flex;
+    width: 100%;
 }
 
-.header-datetime .date {
-    font-size: 2.4rem;
-    font-weight: 300;
-    opacity: 0.8;
+.scenario-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
 }
 
-.header-datetime .weekday {
-    font-size: 2.4rem;
-    font-weight: 300;
-    opacity: 0.8;
-}
-
-.header-controls {
+.scenario-label {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    background: var(--primary-background-color);
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--primary-text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
+        -5px -5px 10px var(--neumo-shadow-light);
+}
+
+/* Наведение */
+.scenario-label:hover {
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+        -3px -3px 6px var(--neumo-shadow-light);
+}
+
+/* Активное состояние (когда чекбокс выбран) */
+.scenario-checkbox:checked+.scenario-label {
+    box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
+        inset -3px -3px 6px var(--neumo-shadow-light);
+    color: var(--info-color);
+}
+
+/* Для темной темы */
+body.dark-theme .scenario-label {
+    box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
+        -5px -5px 10px var(--neumo-shadow-light);
+}
+
+body.dark-theme .scenario-label:hover {
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+        -3px -3px 6px var(--neumo-shadow-light);
+}
+
+body.dark-theme .scenario-checkbox:checked+.scenario-label {
+    box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
+        inset -3px -3px 6px var(--neumo-shadow-light);
+}
+
+/* Блок сценариев */
+.block-scenaries {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.scenaries-title {
+    font-size: 2rem;
+    color: var(--primary-text-color);
+    margin-bottom: 1rem;
 }
 
 /* Адаптивность для планшетов */
 @media (max-width: 768px) {
     .container {
-        padding: 1.5rem;
+        padding: 1.75rem;
     }
-    
-    .header-datetime .time {
+
+    .block-scenaries {
+        gap: 1.75rem;
+        margin-bottom: 3rem;
+    }
+
+    .scenaries-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .time {
         font-size: 5rem;
     }
-    
-    .header-datetime .date,
-    .header-datetime .weekday {
-        font-size: 1.8rem;
-    }
-    
-    .header-datetime {
-        gap: 1.5rem;
+
+    .today {
+        font-size: 2rem;
     }
 }
 
@@ -226,29 +274,27 @@ body.dark-theme .theme-toggle .icon-moon svg {
     .container {
         padding: 1rem;
     }
-    
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
+
+    .block-scenaries {
         gap: 1rem;
         margin-bottom: 2rem;
     }
-    
-    .header-datetime {
-        flex-wrap: wrap;
-        gap: 1rem;
+
+    .scenaries-title {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
     }
-    
-    .header-datetime .time {
-        font-size: 3.5rem;
+
+    .time {
+        font-size: 2.5rem;
     }
-    
-    .header-datetime .date,
-    .header-datetime .weekday {
-        font-size: 1.4rem;
+
+    .today {
+        font-size: 0.9rem;
     }
-    
-    .header-controls {
-        align-self: flex-end;
+
+    .scenario-label {
+        font-size: 1.2rem;
+        min-height: 50px;
     }
 }
