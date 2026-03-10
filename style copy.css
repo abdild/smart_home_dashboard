@@ -1,0 +1,199 @@
+/* style.css */
+/* Минимальные стили сетки с неоморфным подходом */
+/* Адаптивность: смартфон (до 768px) и планшет (768px+) */
+
+/* Сброс отступов и box-sizing */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:host {
+    display: block;
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--primary-background-color);
+    overflow: hidden;
+}
+
+:host([theme="dark"]) {
+    --primary-background-color: #31343c;
+    --card-background-color: #252b33;
+    --primary-text-color: #e4e6eb;
+    --secondary-text-color: #b0b3b8;
+    --success-color: #4caf9e;
+    --success-bg: rgba(76, 175, 158, 0.15);
+    --danger-color: #f28b82;
+    --danger-bg: rgba(242, 139, 130, 0.15);
+    --info-color: #7aa2f7;
+    --info-bg: rgba(122, 162, 247, 0.15);
+    --border-color: rgba(255, 255, 255, 0.05);
+    --neumo-shadow-dark: #0f1215;
+    --neumo-shadow-light: #2f3741;
+    --warning-color: #f1c40f;
+    --warning-bg: rgba(241, 196, 15, 0.15);
+}
+
+:host([theme="light"]) {
+    --primary-background-color: #EBF3FA;
+    --card-background-color: #ffffff;
+    --primary-text-color: #2c3e50;
+    --secondary-text-color: #5d6f7e;
+    --success-color: #2e7d73;
+    --success-bg: rgba(46, 125, 115, 0.1);
+    --danger-color: #d32f2f;
+    --danger-bg: rgba(211, 47, 47, 0.1);
+    --info-color: #1976d2;
+    --info-bg: rgba(25, 118, 210, 0.1);
+    --border-color: rgba(0, 0, 0, 0.05);
+    --neumo-shadow-dark: #d1d9e6;
+    --neumo-shadow-light: #ffffff;
+    --warning-color: #f39c12;
+    --warning-bg: rgba(243, 156, 18, 0.1);
+}
+
+.container {
+    max-width: 1024px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: transparent;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Неоморфный переключатель темы */
+.theme-toggle {
+    width: 80px;
+    height: 38px;
+    border-radius: 30px;
+    background: #EBF3FA;
+    box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle::before {
+    content: "";
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    top: 3px;
+    left: 4px;
+    background: #e0e5ec;
+    box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.theme-toggle.dark::before {
+    transform: translateX(40px);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    position: absolute;
+    top: 7px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle .icon-sun svg,
+.theme-toggle .icon-moon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+}
+
+.theme-toggle .icon-sun {
+    left: 8px;
+    color: #f39c12;
+    opacity: 1;
+}
+
+.theme-toggle .icon-moon {
+    right: 8px;
+    color: #f1c40f;
+    opacity: 0;
+}
+
+.theme-toggle.dark .icon-sun {
+    opacity: 0;
+}
+
+.theme-toggle.dark .icon-moon {
+    opacity: 1;
+}
+
+/* Для темной темы */
+:host([theme="dark"]) .theme-toggle {
+    background: #2d343c;
+    box-shadow: inset 5px 5px 10px #1a1e24, inset -5px -5px 10px #404854;
+}
+
+:host([theme="dark"]) .theme-toggle::before {
+    background: #2d343c;
+    box-shadow: 3px 3px 6px #1a1e24, -3px -3px 6px #404854;
+}
+
+:host([theme="dark"]) .theme-toggle .icon-moon svg {
+    stroke: #f1c40f;
+}
+
+/* Хедер с датой и временем */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    flex-shrink: 0;
+    margin-bottom: 3rem;
+}
+
+.header-datetime {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    color: var(--primary-text-color);
+}
+
+.header-datetime .time {
+    font-size: 7rem;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 2px;
+}
+
+.header-datetime .date {
+    font-size: 2.4rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.header-datetime .weekday {
+    font-size: 2.4rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+}
