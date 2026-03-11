@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.querySelector('.theme-icon use');
 
-    // Элемент переключателя устройства
-    const deviceSwitch = document.getElementById('deviceSwitch');
-
     // Функция обновления даты и времени
     function updateDateTime() {
         const now = new Date();
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обновляем сразу и запускаем интервал
     updateDateTime();
-    setInterval(updateDateTime, 60000); // Обновляем каждую минуту
+    setInterval(updateDateTime, 60000);
 
     // Функция обновления иконки темы
     function updateThemeIcon(isDark) {
@@ -55,19 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик переключения темы
     themeToggle.addEventListener('click', function () {
-        // Переключаем класс на body
         document.body.classList.toggle('dark-theme');
         document.body.classList.toggle('light-theme');
 
-        // Переключаем класс на переключателе
         themeToggle.classList.toggle('dark');
         themeToggle.classList.toggle('light');
 
-        // Обновляем иконку
         const isDark = document.body.classList.contains('dark-theme');
         updateThemeIcon(isDark);
 
-        // Сохраняем выбор темы в localStorage
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
@@ -87,52 +80,89 @@ document.addEventListener('DOMContentLoaded', function () {
         updateThemeIcon(false);
     }
 
-    // Функция для переключения состояния deviceSwitch
-    function toggleDeviceSwitch() {
-        deviceSwitch.classList.toggle('on');
-        const isOn = deviceSwitch.classList.contains('on');
-        deviceSwitch.setAttribute('aria-checked', isOn);
-        
-        // Здесь можно добавить логику для Home Assistant
-        console.log(`Устройство ${isOn ? 'включено' : 'выключено'}`);
-        
-        // Пример отправки события в Home Assistant (через WebSocket или API)
-        // Если вы интегрируете это в Home Assistant, раскомментируйте:
-        /*
-        if (window.hassConnection) {
-            hassConnection.then(({ auth, conn }) => {
-                conn.sendMessage({
-                    type: 'call_service',
-                    domain: 'switch',
-                    service: isOn ? 'turn_on' : 'turn_off',
-                    service_data: {
-                        entity_id: 'switch.device_switch' // Замените на ваш entity_id
-                    }
-                });
-            });
+    // Функция для обновления цвета иконки устройства
+    function updateDeviceIcon(deviceElement, isOn) {
+        const deviceIcon = deviceElement.querySelector('.device-icon');
+        if (deviceIcon) {
+            if (isOn) {
+                deviceIcon.classList.add('device-on');
+            } else {
+                deviceIcon.classList.remove('device-on');
+            }
         }
-        */
     }
 
-    // Обработчик для переключателя устройства
-    if (deviceSwitch) {
-        deviceSwitch.addEventListener('click', toggleDeviceSwitch);
-        
-        // Добавляем поддержку клавиатуры (пробел и Enter)
-        deviceSwitch.addEventListener('keydown', function (e) {
-            if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                toggleDeviceSwitch();
+    // Функция для создания обработчика переключателя
+    function createSwitchHandler(switchElement, deviceName, deviceElement) {
+        return function toggleSwitch() {
+            switchElement.classList.toggle('on');
+            const isOn = switchElement.classList.contains('on');
+            switchElement.setAttribute('aria-checked', isOn);
+
+            console.log(`${deviceName}: ${isOn ? 'включено' : 'выключено'}`);
+
+            // Обновляем цвет иконки устройства
+            if (deviceElement) {
+                updateDeviceIcon(deviceElement, isOn);
             }
-        });
+
+            // Здесь можно добавить логику для Home Assistant
+            // Например:
+            // if (window.hassConnection) {
+            //     hassConnection.then(({ auth, conn }) => {
+            //         conn.sendMessage({
+            //             type: 'call_service',
+            //             domain: 'switch',
+            //             service: isOn ? 'turn_on' : 'turn_off',
+            //             service_data: {
+            //                 entity_id: `switch.${deviceName.toLowerCase().replace(/\s+/g, '_')}`
+            //             }
+            //         });
+            //     });
+            // }
+        };
     }
+
+    // Инициализация всех переключателей с привязкой к устройствам
+    const switches = [
+        { element: document.getElementById('deviceSwitch1'), name: 'Свет в гостиной', deviceId: 'device1' },
+        { element: document.getElementById('deviceSwitch2'), name: 'Телевизор в спальне', deviceId: 'device2' },
+        { element: document.getElementById('deviceSwitch3'), name: 'Замок входной двери', deviceId: 'device3' },
+        { element: document.getElementById('deviceSwitch4'), name: 'Термостат', deviceId: 'device4' },
+        { element: document.getElementById('deviceSwitch5'), name: 'Камера', deviceId: 'device5' },
+        { element: document.getElementById('cameraSwitch'), name: 'Камера', deviceId: null }
+    ];
+
+    switches.forEach(switchConfig => {
+        const switchElement = switchConfig.element;
+        const deviceName = switchConfig.name;
+        const deviceElement = switchConfig.deviceId ? document.getElementById(switchConfig.deviceId) : null;
+
+        if (switchElement) {
+            const toggleHandler = createSwitchHandler(switchElement, deviceName, deviceElement);
+
+            switchElement.addEventListener('click', toggleHandler);
+
+            switchElement.addEventListener('keydown', function (e) {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    toggleHandler();
+                }
+            });
+
+            // Устанавливаем начальное состояние иконки
+            if (deviceElement) {
+                const isOn = switchElement.classList.contains('on');
+                updateDeviceIcon(deviceElement, isOn);
+            }
+        }
+    });
 
     // Обработчики для чекбоксов сценариев
     const scenarioCheckboxes = document.querySelectorAll('.button-checkbox');
     scenarioCheckboxes.forEach((checkbox, index) => {
         checkbox.addEventListener('change', function () {
             console.log(`Сценарий ${index + 1} ${this.checked ? 'включен' : 'выключен'}`);
-            // Здесь можно добавить логику для управления сценариями
         });
     });
 });

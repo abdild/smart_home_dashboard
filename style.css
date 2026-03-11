@@ -18,7 +18,7 @@ body {
     margin: 0;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--primary-background-color);
-    overflow: hidden;
+    overflow: auto;
     transition: background-color 0.3s ease;
     --border-radius: 0.75rem;
 }
@@ -67,22 +67,47 @@ body.dark-theme {
 
 .container {
     max-width: 1024px;
-    height: 100vh;
     margin: 0 auto;
-    padding: 2rem;
+    padding: clamp(1rem, 3vw, 2rem);
     background-color: transparent;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
 /* Хедер с датой и временем */
 .header {
+    position: sticky;
+    top: 0;
+    background-color: var(--primary-background-color);
+    z-index: 10;
+    box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.15);
+}
+
+/* Темная тема для хедера */
+body.dark-theme .header {
+    box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.4);
+}
+
+.header-content {
+    max-width: 1024px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-    margin-bottom: 3rem;
+    padding: 1rem 2rem;
+}
+
+/* Добавляем псевдоэлемент для плавного перехода фона при скролле */
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: linear-gradient(to bottom, var(--primary-background-color), transparent);
+    pointer-events: none;
 }
 
 .time {
@@ -162,6 +187,7 @@ body.dark-theme .theme-toggle::before {
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    flex: 1;
 }
 
 /* Блок на странице */
@@ -171,11 +197,11 @@ body.dark-theme .theme-toggle::before {
     gap: 1rem;
 }
 
-.block-title {    
+.block-title {
     font-size: clamp(1.25rem, 4vw, 1.75rem);
     font-weight: 600;
     color: var(--primary-text-color);
-    text-shadow: 
+    text-shadow:
         3px 3px 5px var(--neumo-shadow-dark),
         -3px -3px 5px var(--neumo-shadow-light);
     opacity: 0.9;
@@ -209,7 +235,7 @@ body.dark-theme .theme-toggle::before {
     font-size: clamp(1.25rem, 4vw, 1.75rem);
     font-weight: 500;
     color: var(--primary-text-color);
-    text-shadow: 
+    text-shadow:
         3px 3px 5px var(--neumo-shadow-dark),
         -3px -3px 5px var(--neumo-shadow-light);
     opacity: 0.9;
@@ -294,11 +320,74 @@ body.dark-theme .button-checkbox:checked+.button-label {
     gap: clamp(1rem, 3vw, 2rem);
 }
 
-/* Неоморфный переключатель (Switch) */
+/* Стили для устройств */
+.block-devices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+}
+
+.device {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
+        -5px -5px 10px var(--neumo-shadow-light);
+    transition: all 0.2s ease;
+}
+
+.device:hover {
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+        -3px -3px 6px var(--neumo-shadow-light);
+}
+
+.device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.device-icon {
+    width: 4rem;
+    color: var(--secondary-text-color);
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.device-icon.device-on {
+    color: var(--success-color);
+}
+
+.device-since {
+    color: var(--secondary-text-color);
+    font-size: 0.875rem;
+}
+
+.device-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--primary-text-color);
+}
+
+.device-info {
+    color: var(--secondary-text-color);
+    font-size: 0.875rem;
+}
+
+.device-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+/* Неоморфный переключатель (Switch) - идентичен theme-toggle по структуре */
 .switch {
     width: 80px;
     height: 38px;
-    border-radius: 30px;
+    border-radius: 80px;
     background: #EBF3FA;
     box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
     cursor: pointer;
@@ -342,8 +431,13 @@ body.dark-theme .button-checkbox:checked+.button-label {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    font-weight: bold;
+}
+
+.switch .icon-off svg,
+.switch .icon-on svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
 }
 
 .switch .icon-off {
@@ -379,7 +473,7 @@ body.dark-theme .switch::before {
 
 .indicators {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: clamp(1rem, 3vw, 2rem);
@@ -393,32 +487,29 @@ body.dark-theme .switch::before {
 
 .indicator-title {
     text-transform: uppercase;
-    color: var(--secondary-text-color) ;
+    color: var(--secondary-text-color);
 }
 
-.indicator-value{
+.indicator-value {
     font-size: 3rem;
     font-weight: 400;
-    color: var(--primary-text-color) ;
+    color: var(--primary-text-color);
 }
 
-.indicator-unit{
+.indicator-unit {
     font-size: 1rem;
     font-weight: 400;
-    color: var(--secondary-text-color) ;
+    color: var(--secondary-text-color);
 }
 
 /* Адаптивность для планшетов */
 @media (max-width: 768px) {
-    .container {
-        padding: 1.75rem;
-    }
-
     .content {
         gap: 3rem;
     }
 
-    .card, .button-label {
+    .card,
+    .button-label {
         padding: 1.25rem 1.5rem;
     }
 
@@ -433,22 +524,24 @@ body.dark-theme .switch::before {
     .today {
         font-size: 2rem;
     }
+
+    /* 3 карточки в ряд для планшетов */
+    .block-devices {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 /* Адаптивность для смартфонов */
 @media (max-width: 480px) {
-    .container {
-        padding: 1rem;
-    }
-
     .content {
         gap: 2.5rem;
     }
 
-
-    .card, .button-label {
+    .card,
+    .button-label {
         padding: 1rem 1.25rem;
     }
+
     .block {
         gap: 0.75rem;
     }
@@ -464,5 +557,17 @@ body.dark-theme .switch::before {
     .card.camera {
         padding: 1rem;
         min-height: 150px;
+    }
+
+    /* 2 карточки в ряд для смартфонов */
+    .block-devices {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 360px) {
+    .block-devices {
+        grid-template-columns: 1fr;
     }
 }
