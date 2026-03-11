@@ -40,7 +40,7 @@
         <div class="content">
             <div class="block">
                 <div class="block-title">Кнопки</div>
-                <div class="block-scenaries">
+                <div class="block-buttons">
                     <div class="button-item">
                         <input type="checkbox" id="scenario1" class="button-checkbox">
                         <label for="scenario1" class="button-label">
@@ -64,10 +64,49 @@
                 </div>
             </div>
 
-            <!-- Карточка с новым переключателем -->
+            <!-- Карточка с основными покааателями -->
+            <div class="card">
+                <div class="card-title">Основное</div>
+                <div class="indicators">
+                    <div class="indicator">
+                        <div class="indicator-title">название</div>
+                        <div class="indicator-value">25.7<span class="indicator-unit">C</span></div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-title">название</div>
+                        <div class="indicator-value">25.7<span class="indicator-unit">C</span></div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-title">название</div>
+                        <div class="indicator-value">25.7<span class="indicator-unit">C</span></div>
+                    </div>
+                    <div class="indicator">
+                        <div class="indicator-title">название</div>
+                        <div class="indicator-value">25.7<span class="indicator-unit">C</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Управление прибором/оборудованием -->
+            <div class="card">
+                <div class="devices">
+                    <div class="device">
+                        <div class="device-header">
+                            <div class="device-icon">icon</div>
+                            <div class="device-since">since</div>
+                        </div>
+                        <div class="device-title">title</div>
+                        <div class="device-info">info</div>
+                        <div class="device-footer">
+                            footer
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Карточка с камерой -->
             <div class="card camera">
                 <div class="card-title">Управление</div>
-                <!-- Переключатель, стилизованный под theme-toggle -->
                 <div class="switch" id="deviceSwitch" role="switch" aria-checked="false" tabindex="0">
                     <span class="icon-off">✕</span>
                     <span class="icon-on">✓</span>
