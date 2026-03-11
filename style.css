@@ -20,6 +20,7 @@ body {
     background-color: var(--primary-background-color);
     overflow: hidden;
     transition: background-color 0.3s ease;
+    --border-radius: 0.75rem;
 }
 
 /* Светлая тема (по умолчанию) */
@@ -30,7 +31,17 @@ body.light-theme {
     --secondary-text-color: #5d6f7e;
     --border-color: rgba(0, 0, 0, 0.08);
     --card-shadow: 0px 4px 20px -4px rgba(0, 0, 0, 0.1);
-    --info-color: #1976d2;
+
+    /* Яркие цвета для светлой темы */
+    --info-color: #0066CC;
+    /* Яркий синий */
+    --success-color: #00A86B;
+    /* Насыщенный зеленый */
+    --danger-color: #DC2626;
+    /* Яркий красный */
+    --warning-color: #F59E0B;
+    /* Насыщенный оранжевый */
+
     --icon-color-sun: #f39c12;
     --icon-color-moon: #f1c40f;
     --neumo-shadow-dark: #d1d9e6;
@@ -45,7 +56,17 @@ body.dark-theme {
     --secondary-text-color: #b0b3b8;
     --border-color: rgba(255, 255, 255, 0.08);
     --card-shadow: 0px 4px 20px -4px rgba(0, 0, 0, 0.3);
-    --info-color: #7aa2f7;
+
+    /* Яркие цвета для темной темы (более светлые/неоновые оттенки) */
+    --info-color: #60A5FA;
+    /* Светлый синий */
+    --success-color: #4ADE80;
+    /* Светлый зеленый */
+    --danger-color: #F87171;
+    /* Светлый красный */
+    --warning-color: #FBBF24;
+    /* Светлый оранжевый/желтый */
+
     --icon-color-sun: #f39c12;
     --icon-color-moon: #f1c40f;
     --neumo-shadow-dark: #0f1215;
@@ -90,7 +111,7 @@ body.dark-theme {
 .theme-toggle {
     width: 80px;
     height: 38px;
-    border-radius: 30px;
+    border-radius: 80px;
     background: #EBF3FA;
     box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
     cursor: pointer;
@@ -144,22 +165,45 @@ body.dark-theme .theme-toggle::before {
     box-shadow: 3px 3px 6px #1a1e24, -3px -3px 6px #404854;
 }
 
+/* Контент страницы */
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Блок на странице */
+.block {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.block-title {
+    font-size: 1.75rem;
+    color: var(--primary-text-color);
+}
+
 /* Стандартная карточка */
 .card {
     width: 100%;
-    height: 0;
-    padding: 1rem 1.5rem;
     background-color: var(--card-background-color);
     box-shadow: var(--card-shadow);
-    border-radius: 1rem;
+    border-radius: var(--border-radius);
     overflow: hidden;
     position: relative;
     border: 1px solid var(--border-color);
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .card.camera {
-    padding-bottom: 56.25%;
+    padding: 1.5rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .card-title {
@@ -169,12 +213,12 @@ body.dark-theme .theme-toggle::before {
 }
 
 /* Стили для чекбоксов-кнопок сценариев */
-.scenario-item {
+.button-item {
     display: flex;
     width: 100%;
 }
 
-.scenario-checkbox {
+.button-checkbox {
     position: absolute;
     opacity: 0;
     width: 0;
@@ -182,18 +226,19 @@ body.dark-theme .theme-toggle::before {
     pointer-events: none;
 }
 
-.scenario-label {
+.button-label {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1;
+    min-height: 5rem;
+    gap: 1rem;
+    /* aspect-ratio: 1 / 1; */
     background: var(--primary-background-color);
-    border-radius: 1rem;
-    font-size: 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: clamp(1rem, 5vw, 1.5rem);
     font-weight: 500;
-    color: var(--primary-text-color);
+    color: var(--secondary-text-color);
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
@@ -201,31 +246,38 @@ body.dark-theme .theme-toggle::before {
         -5px -5px 10px var(--neumo-shadow-light);
 }
 
+.button-label svg {
+    width: 1em;
+    height: 1em;
+    font-size: inherit;
+    fill: currentColor;
+}
+
 /* Наведение */
-.scenario-label:hover {
+.button-label:hover {
     box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
         -3px -3px 6px var(--neumo-shadow-light);
 }
 
 /* Активное состояние (когда чекбокс выбран) */
-.scenario-checkbox:checked+.scenario-label {
+.button-checkbox:checked+.button-label {
     box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
         inset -3px -3px 6px var(--neumo-shadow-light);
-    color: var(--info-color);
+    color: var(--success-color);
 }
 
 /* Для темной темы */
-body.dark-theme .scenario-label {
+body.dark-theme .button-label {
     box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
         -5px -5px 10px var(--neumo-shadow-light);
 }
 
-body.dark-theme .scenario-label:hover {
+body.dark-theme .button-label:hover {
     box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
         -3px -3px 6px var(--neumo-shadow-light);
 }
 
-body.dark-theme .scenario-checkbox:checked+.scenario-label {
+body.dark-theme .button-checkbox:checked+.button-label {
     box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
         inset -3px -3px 6px var(--neumo-shadow-light);
 }
@@ -235,13 +287,89 @@ body.dark-theme .scenario-checkbox:checked+.scenario-label {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    margin-bottom: 3rem;
 }
 
-.scenaries-title {
-    font-size: 2rem;
-    color: var(--primary-text-color);
-    margin-bottom: 1rem;
+/* Неоморфный переключатель (Switch) - стилизованный под theme-toggle */
+.switch {
+    width: 80px;
+    height: 38px;
+    border-radius: 30px;
+    background: #EBF3FA;
+    box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    display: inline-block;
+    outline: none;
+}
+
+.switch:focus-visible {
+    outline: 2px solid var(--info-color);
+    outline-offset: 2px;
+}
+
+.switch::before {
+    content: "";
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    top: 3px;
+    left: 4px;
+    background: #e0e5ec;
+    box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.switch.on::before {
+    transform: translateX(40px);
+}
+
+.switch .icon-off,
+.switch .icon-on {
+    position: absolute;
+    top: 7px;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.switch .icon-off {
+    left: 8px;
+    color: var(--danger-color);
+    opacity: 1;
+}
+
+.switch .icon-on {
+    right: 8px;
+    color: var(--success-color);
+    opacity: 0;
+}
+
+.switch.on .icon-off {
+    opacity: 0;
+}
+
+.switch.on .icon-on {
+    opacity: 1;
+}
+
+/* Для темной темы */
+body.dark-theme .switch {
+    background: #2d343c;
+    box-shadow: inset 5px 5px 10px #1a1e24, inset -5px -5px 10px #404854;
+}
+
+body.dark-theme .switch::before {
+    background: #2d343c;
+    box-shadow: 3px 3px 6px #1a1e24, -3px -3px 6px #404854;
 }
 
 /* Адаптивность для планшетов */
@@ -250,14 +378,20 @@ body.dark-theme .scenario-checkbox:checked+.scenario-label {
         padding: 1.75rem;
     }
 
-    .block-scenaries {
-        gap: 1.75rem;
-        margin-bottom: 3rem;
+    .content {
+        gap: 3rem;
     }
 
-    .scenaries-title {
-        font-size: 2rem;
-        margin-bottom: 1rem;
+    .block {
+        gap: 1rem;
+    }
+
+    .block-title {
+        font-size: 1.5rem;
+    }
+
+    .block-scenaries {
+        gap: 1.75rem;
     }
 
     .time {
@@ -275,14 +409,20 @@ body.dark-theme .scenario-checkbox:checked+.scenario-label {
         padding: 1rem;
     }
 
-    .block-scenaries {
-        gap: 1rem;
-        margin-bottom: 2rem;
+    .content {
+        gap: 2.5rem;
     }
 
-    .scenaries-title {
+    .block {
+        gap: 0.75em;
+    }
+
+    .block-title {
         font-size: 1rem;
-        margin-bottom: 0.75rem;
+    }
+
+    .block-scenaries {
+        gap: 1rem;
     }
 
     .time {
@@ -293,8 +433,14 @@ body.dark-theme .scenario-checkbox:checked+.scenario-label {
         font-size: 0.9rem;
     }
 
-    .scenario-label {
+    .button-label {
         font-size: 1.2rem;
         min-height: 50px;
+    }
+
+    .card.camera {
+        padding: 1rem;
+        min-height: 150px;
+        gap: 1rem;
     }
 }

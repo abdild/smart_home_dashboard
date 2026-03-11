@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.querySelector('.theme-icon use');
 
+    // Элемент переключателя устройства
+    const deviceSwitch = document.getElementById('deviceSwitch');
+
     // Функция обновления даты и времени
     function updateDateTime() {
         const now = new Date();
@@ -84,11 +87,51 @@ document.addEventListener('DOMContentLoaded', function () {
         updateThemeIcon(false);
     }
 
-    // Обработчики для чекбоксов сценариев (пример)
-    const scenarioCheckboxes = document.querySelectorAll('.scenario-checkbox');
-    scenarioCheckboxes.forEach(checkbox => {
+    // Функция для переключения состояния deviceSwitch
+    function toggleDeviceSwitch() {
+        deviceSwitch.classList.toggle('on');
+        const isOn = deviceSwitch.classList.contains('on');
+        deviceSwitch.setAttribute('aria-checked', isOn);
+        
+        // Здесь можно добавить логику для Home Assistant
+        console.log(`Устройство ${isOn ? 'включено' : 'выключено'}`);
+        
+        // Пример отправки события в Home Assistant (через WebSocket или API)
+        // Если вы интегрируете это в Home Assistant, раскомментируйте:
+        /*
+        if (window.hassConnection) {
+            hassConnection.then(({ auth, conn }) => {
+                conn.sendMessage({
+                    type: 'call_service',
+                    domain: 'switch',
+                    service: isOn ? 'turn_on' : 'turn_off',
+                    service_data: {
+                        entity_id: 'switch.device_switch' // Замените на ваш entity_id
+                    }
+                });
+            });
+        }
+        */
+    }
+
+    // Обработчик для переключателя устройства
+    if (deviceSwitch) {
+        deviceSwitch.addEventListener('click', toggleDeviceSwitch);
+        
+        // Добавляем поддержку клавиатуры (пробел и Enter)
+        deviceSwitch.addEventListener('keydown', function (e) {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggleDeviceSwitch();
+            }
+        });
+    }
+
+    // Обработчики для чекбоксов сценариев
+    const scenarioCheckboxes = document.querySelectorAll('.button-checkbox');
+    scenarioCheckboxes.forEach((checkbox, index) => {
         checkbox.addEventListener('change', function () {
-            console.log(`Сценарий ${this.id} ${this.checked ? 'включен' : 'выключен'}`);
+            console.log(`Сценарий ${index + 1} ${this.checked ? 'включен' : 'выключен'}`);
             // Здесь можно добавить логику для управления сценариями
         });
     });

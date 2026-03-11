@@ -12,110 +12,6 @@ class MyDashboard extends HTMLElement {
         this.activeMenu = "home";
 
         this.loadSettings();
-
-        // Добавляем демо-данные для тестирования
-        this._hass = {
-            connected: true,
-            states: {
-                "light.living_room": {
-                    state: "on",
-                    attributes: { friendly_name: "Свет в гостиной" }
-                },
-                "light.kitchen": {
-                    state: "off",
-                    attributes: { friendly_name: "Свет на кухне" }
-                },
-                "light.bedroom": {
-                    state: "on",
-                    attributes: { friendly_name: "Свет в спальне" }
-                },
-                "light.bathroom": {
-                    state: "off",
-                    attributes: { friendly_name: "Свет в ванной" }
-                },
-                "sensor.temperature": {
-                    state: "22.5",
-                    attributes: { 
-                        friendly_name: "Температура",
-                        unit_of_measurement: "°C"
-                    }
-                },
-                "sensor.humidity": {
-                    state: "45",
-                    attributes: { 
-                        friendly_name: "Влажность",
-                        unit_of_measurement: "%"
-                    }
-                },
-                "binary_sensor.motion_living": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Движение в гостиной",
-                        device_class: "motion"
-                    }
-                },
-                "binary_sensor.motion_yard": {
-                    state: "on",
-                    attributes: { 
-                        friendly_name: "Движение во дворе",
-                        device_class: "motion"
-                    }
-                },
-                "binary_sensor.door_front": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Входная дверь",
-                        device_class: "door"
-                    }
-                },
-                "binary_sensor.window_kitchen": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Окно на кухне",
-                        device_class: "window"
-                    }
-                },
-                "binary_sensor.garage_door": {
-                    state: "on",
-                    attributes: { 
-                        friendly_name: "Гаражные ворота",
-                        device_class: "garage_door"
-                    }
-                },
-                "binary_sensor.smoke": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Дым",
-                        device_class: "smoke"
-                    }
-                },
-                "binary_sensor.water_leak": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Протечка воды",
-                        device_class: "moisture"
-                    }
-                },
-                "camera.cam1_yard": {
-                    state: "idle",
-                    attributes: { 
-                        friendly_name: "Камера во дворе"
-                    }
-                },
-                "camera.cam2_door": {
-                    state: "idle",
-                    attributes: { 
-                        friendly_name: "Камера у двери"
-                    }
-                },
-                "camera.cam3_garage": {
-                    state: "off",
-                    attributes: { 
-                        friendly_name: "Камера в гараже"
-                    }
-                }
-            }
-        };
     }
 
     getThemeByTime() {
@@ -162,8 +58,6 @@ class MyDashboard extends HTMLElement {
             --border-color: rgba(255, 255, 255, 0.05);
             --neumo-shadow-dark: #0f1215;
             --neumo-shadow-light: #2f3741;
-            --warning-color: #f1c40f;
-            --warning-bg: rgba(241, 196, 15, 0.15);
         }
 
         :host([theme="light"]) {
@@ -180,8 +74,6 @@ class MyDashboard extends HTMLElement {
             --border-color: rgba(0, 0, 0, 0.05);
             --neumo-shadow-dark: #d1d9e6;
             --neumo-shadow-light: #ffffff;
-            --warning-color: #f39c12;
-            --warning-bg: rgba(243, 156, 18, 0.1);
         }
 
         .container {
@@ -539,40 +431,6 @@ class MyDashboard extends HTMLElement {
             color: var(--danger-color);
         }
 
-        .status-value.success {
-            color: var(--success-color);
-        }
-
-        .status-value.danger {
-            color: var(--danger-color);
-        }
-
-        .status-value.warning {
-            color: var(--warning-color);
-        }
-
-        /* Стили для крупных индикаторов */
-        .large-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .large-indicator .icon {
-            font-size: 3rem;
-        }
-
-        .large-indicator .value {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .large-indicator .label {
-            font-size: 0.9rem;
-            color: var(--secondary-text-color);
-        }
-
         /* Адаптация для смартфона */
         @media (max-width: 768px) {
             .container {
@@ -669,12 +527,16 @@ class MyDashboard extends HTMLElement {
                 this.activeMenu = action;
 
                 const contentArea = this.shadowRoot.querySelector(".content-area");
+                const headerTitle = this.shadowRoot.querySelector(".header-datetime .date");
 
                 if (contentArea) {
                     contentArea.innerHTML = this._hass
                         ? this.renderActiveContent()
                         : this.renderLoading();
                 }
+
+                // Добавляем визуальную обратную связь
+                console.log(`Переключено на страницу: ${action}`);
             });
         });
 
@@ -774,15 +636,6 @@ class MyDashboard extends HTMLElement {
     }
 
     renderHomeContent() {
-        // Получаем данные из _hass
-        const lights = Object.entries(this._hass?.states || {})
-            .filter(([id]) => id.startsWith('light.'))
-            .map(([id, entity]) => entity);
-        
-        const lightsOn = lights.filter(l => l.state === 'on').length;
-        const temperature = this._hass?.states['sensor.temperature']?.state || '22.5';
-        const humidity = this._hass?.states['sensor.humidity']?.state || '45';
-
         return `
             <div class="home-grid">
                 <div class="card">
@@ -793,7 +646,7 @@ class MyDashboard extends HTMLElement {
                     <div class="placeholder-content">
                         <div style="font-size: 3rem;">🏡</div>
                         <div style="font-weight: 500;">Добро пожаловать!</div>
-                        <div style="font-size: 0.9rem;">Умный дом под управлением</div>
+                        <div style="font-size: 0.9rem;">Это главная страница дашборда</div>
                     </div>
                 </div>
 
@@ -804,19 +657,19 @@ class MyDashboard extends HTMLElement {
                     </div>
                     <div class="status-row">
                         <span class="status-label">Активных устройств:</span>
-                        <span class="status-value">${Object.keys(this._hass?.states || {}).length}</span>
+                        <span class="status-value">12</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Свет включен:</span>
-                        <span class="status-value on">${lightsOn}</span>
+                        <span class="status-value on">5</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Температура:</span>
-                        <span class="status-value">${temperature}°C</span>
+                        <span class="status-value">22°C</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Влажность:</span>
-                        <span class="status-value">${humidity}%</span>
+                        <span class="status-value">45%</span>
                     </div>
                 </div>
 
@@ -827,27 +680,19 @@ class MyDashboard extends HTMLElement {
                     </div>
                     <div class="status-row">
                         <span class="status-label">Гостиная:</span>
-                        <span class="status-value ${this._hass?.states['light.living_room']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['light.living_room']?.state === 'on' ? 'Вкл' : 'Выкл'}
-                        </span>
+                        <span class="status-value on">Вкл</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Кухня:</span>
-                        <span class="status-value ${this._hass?.states['light.kitchen']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['light.kitchen']?.state === 'on' ? 'Вкл' : 'Выкл'}
-                        </span>
+                        <span class="status-value off">Выкл</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Спальня:</span>
-                        <span class="status-value ${this._hass?.states['light.bedroom']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['light.bedroom']?.state === 'on' ? 'Вкл' : 'Выкл'}
-                        </span>
+                        <span class="status-value on">Вкл</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Ванная:</span>
-                        <span class="status-value ${this._hass?.states['light.bathroom']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['light.bathroom']?.state === 'on' ? 'Вкл' : 'Выкл'}
-                        </span>
+                        <span class="status-value off">Выкл</span>
                     </div>
                 </div>
 
@@ -857,16 +702,16 @@ class MyDashboard extends HTMLElement {
                         <span class="card-title">Климат</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Текущая температура:</span>
-                        <span class="status-value">${temperature}°C</span>
+                        <span class="status-label">Термостат:</span>
+                        <span class="status-value on">22°C</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Влажность:</span>
-                        <span class="status-value">${humidity}%</span>
+                        <span class="status-label">Кондиционер:</span>
+                        <span class="status-value off">Выкл</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Комфорт:</span>
-                        <span class="status-value success">Норма</span>
+                        <span class="status-label">Увлажнитель:</span>
+                        <span class="status-value on">45%</span>
                     </div>
                 </div>
             </div>
@@ -874,49 +719,25 @@ class MyDashboard extends HTMLElement {
     }
 
     renderSecurityContent() {
-        // Получаем данные из _hass
-        const motionSensors = Object.entries(this._hass?.states || {})
-            .filter(([id, e]) => id.startsWith('binary_sensor.') && e.attributes.device_class === 'motion');
-        
-        const doorSensors = Object.entries(this._hass?.states || {})
-            .filter(([id, e]) => id.startsWith('binary_sensor.') && 
-                ['door', 'window', 'garage_door'].includes(e.attributes.device_class || ''));
-        
-        const safetySensors = Object.entries(this._hass?.states || {})
-            .filter(([id, e]) => id.startsWith('binary_sensor.') && 
-                ['smoke', 'moisture', 'gas'].includes(e.attributes.device_class || ''));
-        
-        const cameras = Object.entries(this._hass?.states || {})
-            .filter(([id]) => id.startsWith('camera.'));
-
-        const activeAlerts = Object.entries(this._hass?.states || {})
-            .filter(([id, e]) => id.startsWith('binary_sensor.') && e.state === 'on').length;
-
-        const doorOpen = doorSensors.filter(([id, e]) => e.state === 'on').length;
-        const motionActive = motionSensors.filter(([id, e]) => e.state === 'on').length;
-
         return `
             <div class="security-grid">
-                <div class="card" style="grid-column: span 3; background-color: ${activeAlerts > 0 ? 'var(--danger-bg)' : 'var(--success-bg)'};">
+                <div class="card" style="grid-column: span 3; background-color: var(--danger-bg);">
                     <div class="card-header">
                         <div class="card-icon">🔒</div>
                         <span class="card-title">Система безопасности</span>
                     </div>
                     <div style="display: flex; justify-content: space-around; align-items: center; padding: 1rem 0;">
-                        <div class="large-indicator">
-                            <div class="icon" style="color: var(--success-color);">${activeAlerts === 0 ? '🟢' : '🔴'}</div>
-                            <div class="value">${activeAlerts === 0 ? 'Система активна' : 'Есть тревоги'}</div>
-                            <div class="label">Статус</div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--success-color);">🟢</div>
+                            <div style="font-weight: 500;">Система активна</div>
                         </div>
-                        <div class="large-indicator">
-                            <div class="icon">🚨</div>
-                            <div class="value">${activeAlerts}</div>
-                            <div class="label">Тревог</div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem;">🚨</div>
+                            <div style="font-weight: 500;">0 тревог</div>
                         </div>
-                        <div class="large-indicator">
-                            <div class="icon">📹</div>
-                            <div class="value">${cameras.length}</div>
-                            <div class="label">Камеры</div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem;">📹</div>
+                            <div style="font-weight: 500;">4 камеры</div>
                         </div>
                     </div>
                 </div>
@@ -928,26 +749,15 @@ class MyDashboard extends HTMLElement {
                     </div>
                     <div class="status-row">
                         <span class="status-label">Входная дверь:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.door_front']?.state === 'on' ? 'danger' : 'success'}">
-                            ${this._hass?.states['binary_sensor.door_front']?.state === 'on' ? 'Открыта' : 'Закрыта'}
-                        </span>
+                        <span class="status-value success">Закрыта</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Окно на кухне:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.window_kitchen']?.state === 'on' ? 'danger' : 'success'}">
-                            ${this._hass?.states['binary_sensor.window_kitchen']?.state === 'on' ? 'Открыто' : 'Закрыто'}
-                        </span>
+                        <span class="status-label">Окна:</span>
+                        <span class="status-value success">Закрыты</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Гараж:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.garage_door']?.state === 'on' ? 'danger' : 'success'}">
-                            ${this._hass?.states['binary_sensor.garage_door']?.state === 'on' ? 'Открыт' : 'Закрыт'}
-                        </span>
-                    </div>
-                    <div class="card-footer">
-                        <span class="badge ${doorOpen > 0 ? 'warning' : 'success'}">
-                            ${doorOpen > 0 ? `${doorOpen} открыто` : 'Всё закрыто'}
-                        </span>
+                        <span class="status-value danger">Открыт</span>
                     </div>
                 </div>
 
@@ -958,20 +768,15 @@ class MyDashboard extends HTMLElement {
                     </div>
                     <div class="status-row">
                         <span class="status-label">Гостиная:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.motion_living']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['binary_sensor.motion_living']?.state === 'on' ? 'Есть' : 'Нет'}
-                        </span>
+                        <span class="status-value off">Нет</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Коридор:</span>
+                        <span class="status-value off">Нет</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Двор:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.motion_yard']?.state === 'on' ? 'on' : 'off'}">
-                            ${this._hass?.states['binary_sensor.motion_yard']?.state === 'on' ? 'Есть' : 'Нет'}
-                        </span>
-                    </div>
-                    <div class="card-footer">
-                        <span class="badge ${motionActive > 0 ? 'warning' : 'success'}">
-                            ${motionActive > 0 ? `${motionActive} активных` : 'Нет движения'}
-                        </span>
+                        <span class="status-value on">Движение</span>
                     </div>
                 </div>
 
@@ -982,15 +787,15 @@ class MyDashboard extends HTMLElement {
                     </div>
                     <div class="status-row">
                         <span class="status-label">Дым:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.smoke']?.state === 'on' ? 'danger' : 'success'}">
-                            ${this._hass?.states['binary_sensor.smoke']?.state === 'on' ? 'Тревога' : 'Норма'}
-                        </span>
+                        <span class="status-value success">Норма</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Утечка газа:</span>
+                        <span class="status-value success">Норма</span>
                     </div>
                     <div class="status-row">
                         <span class="status-label">Протечка воды:</span>
-                        <span class="status-value ${this._hass?.states['binary_sensor.water_leak']?.state === 'on' ? 'danger' : 'success'}">
-                            ${this._hass?.states['binary_sensor.water_leak']?.state === 'on' ? 'Тревога' : 'Норма'}
-                        </span>
+                        <span class="status-value success">Норма</span>
                     </div>
                 </div>
 
@@ -1000,22 +805,16 @@ class MyDashboard extends HTMLElement {
                         <span class="card-title">Камеры</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Камера во дворе:</span>
-                        <span class="status-value ${this._hass?.states['camera.cam1_yard']?.state === 'idle' ? 'success' : 'off'}">
-                            ${this._hass?.states['camera.cam1_yard']?.state === 'idle' ? 'Online' : 'Offline'}
-                        </span>
+                        <span class="status-label">Cam 1 (двор):</span>
+                        <span class="status-value on">Online</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Камера у двери:</span>
-                        <span class="status-value ${this._hass?.states['camera.cam2_door']?.state === 'idle' ? 'success' : 'off'}">
-                            ${this._hass?.states['camera.cam2_door']?.state === 'idle' ? 'Online' : 'Offline'}
-                        </span>
+                        <span class="status-label">Cam 2 (вход):</span>
+                        <span class="status-value on">Online</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">Камера в гараже:</span>
-                        <span class="status-value ${this._hass?.states['camera.cam3_garage']?.state === 'idle' ? 'success' : 'off'}">
-                            ${this._hass?.states['camera.cam3_garage']?.state === 'idle' ? 'Online' : 'Offline'}
-                        </span>
+                        <span class="status-label">Cam 3 (гараж):</span>
+                        <span class="status-value off">Offline</span>
                     </div>
                 </div>
 
@@ -1025,24 +824,16 @@ class MyDashboard extends HTMLElement {
                         <span class="card-title">Последние события</span>
                     </div>
                     <div class="status-row">
-                        <span class="status-label">${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <span class="status-value">Система активна</span>
+                        <span class="status-label">10:23</span>
+                        <span class="status-value">Движение во дворе</span>
                     </div>
-                    ${motionActive > 0 ? `
                     <div class="status-row">
-                        <span class="status-label">${new Date(Date.now() - 5*60000).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <span class="status-value warning">Движение во дворе</span>
+                        <span class="status-label">09:45</span>
+                        <span class="status-value">Открыт гараж</span>
                     </div>
-                    ` : ''}
-                    ${doorOpen > 0 ? `
                     <div class="status-row">
-                        <span class="status-label">${new Date(Date.now() - 15*60000).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <span class="status-value warning">Открыт гараж</span>
-                    </div>
-                    ` : ''}
-                    <div class="status-row">
-                        <span class="status-label">${new Date(Date.now() - 60*60000).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <span class="status-value success">Система активирована</span>
+                        <span class="status-label">08:30</span>
+                        <span class="status-value">Система активирована</span>
                     </div>
                 </div>
             </div>
