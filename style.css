@@ -21,6 +21,47 @@ body {
     overflow: auto;
     transition: background-color 0.3s ease;
     --border-radius: 0.75rem;
+
+    /* Базовые размеры шрифтов для мобильных (по умолчанию) */
+    --font-size-xs: 0.75rem;
+    /* 12px - сверхмалый */
+    --font-size-sm: 0.875rem;
+    /* 14px - малый */
+    --font-size-base: 1rem;
+    /* 16px - базовый */
+    --font-size-md: 1.125rem;
+    /* 18px - средний */
+    --font-size-lg: 1.25rem;
+    /* 20px - большой */
+    --font-size-xl: 1.5rem;
+    /* 24px - очень большой */
+    --font-size-2xl: 2rem;
+    /* 32px - двойной */
+    --font-size-3xl: 2.5rem;
+    /* 40px - тройной */
+    --font-size-4xl: 3rem;
+    /* 48px - учетверенный */
+    --font-size-5xl: 4rem;
+    /* 64px - пятерной */
+    --font-size-6xl: 5rem;
+    /* 80px - шестерной */
+    --font-size-7xl: 7rem;
+    /* 112px - седьмерной */
+
+    /* Переменные для конкретных элементов */
+    --time-font-size: var(--font-size-7xl);
+    --today-font-size: var(--font-size-2xl);
+    --today-date-font-size: var(--font-size-2xl);
+    --today-weekday-font-size: var(--font-size-2xl);
+    --block-title-font-size: var(--font-size-xl);
+    --card-title-font-size: var(--font-size-lg);
+    --device-title-font-size: var(--font-size-md);
+    --device-info-font-size: var(--font-size-sm);
+    --device-since-font-size: var(--font-size-xs);
+    --button-label-font-size: var(--font-size-base);
+    --indicator-value-font-size: var(--font-size-3xl);
+    --indicator-unit-font-size: var(--font-size-base);
+    --indicator-title-font-size: var(--font-size-xs);
 }
 
 /* Светлая тема (по умолчанию) */
@@ -65,6 +106,44 @@ body.dark-theme {
     --neumo-shadow-light: #2f3741;
 }
 
+/* Адаптивность для планшетов */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        --time-font-size: var(--font-size-5xl);
+        --today-font-size: var(--font-size-xl);
+        --today-date-font-size: var(--font-size-xl);
+        --today-weekday-font-size: var(--font-size-xl);
+        --block-title-font-size: var(--font-size-lg);
+        --card-title-font-size: var(--font-size-md);
+        --device-title-font-size: var(--font-size-base);
+        --device-info-font-size: var(--font-size-sm);
+        --device-since-font-size: var(--font-size-xs);
+        --button-label-font-size: var(--font-size-sm);
+        --indicator-value-font-size: var(--font-size-2xl);
+        --indicator-unit-font-size: var(--font-size-sm);
+        --indicator-title-font-size: var(--font-size-xs);
+    }
+}
+
+/* Адаптивность для смартфонов */
+@media (max-width: 480px) {
+    body {
+        --time-font-size: var(--font-size-2xl);
+        --today-font-size: var(--font-size-sm);
+        --today-date-font-size: var(--font-size-sm);
+        --today-weekday-font-size: var(--font-size-sm);
+        --block-title-font-size: var(--font-size-sm);
+        --card-title-font-size: var(--font-size-sm);
+        --device-title-font-size: var(--font-size-xs);
+        --device-info-font-size: var(--font-size-xs);
+        --device-since-font-size: var(--font-size-xs);
+        --button-label-font-size: var(--font-size-xs);
+        --indicator-value-font-size: var(--font-size-lg);
+        --indicator-unit-font-size: var(--font-size-xs);
+        --indicator-title-font-size: var(--font-size-xs);
+    }
+}
+
 .container {
     max-width: 1024px;
     margin: 0 auto;
@@ -95,7 +174,7 @@ body.dark-theme .header {
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-    padding: 1rem 2rem;
+    padding: 1rem clamp(1rem, 3vw, 2rem);
 }
 
 /* Добавляем псевдоэлемент для плавного перехода фона при скролле */
@@ -112,7 +191,7 @@ body.dark-theme .header {
 
 .time {
     color: var(--primary-text-color);
-    font-size: 7rem;
+    font-size: var(--time-font-size);
     font-weight: 500;
     line-height: 1;
     letter-spacing: 2px;
@@ -120,8 +199,17 @@ body.dark-theme .header {
 
 .today {
     color: var(--secondary-text-color);
-    font-size: 2.4rem;
+    font-size: var(--today-font-size);
     font-weight: 400;
+    text-align: right;
+}
+
+#date {
+    font-size: var(--today-date-font-size);
+}
+
+#weekday {
+    font-size: var(--today-weekday-font-size);
 }
 
 /* Неоморфный переключатель темы */
@@ -198,7 +286,7 @@ body.dark-theme .theme-toggle::before {
 }
 
 .block-title {
-    font-size: clamp(1.25rem, 4vw, 1.75rem);
+    font-size: var(--block-title-font-size);
     font-weight: 600;
     color: var(--primary-text-color);
     text-shadow:
@@ -232,7 +320,7 @@ body.dark-theme .theme-toggle::before {
 }
 
 .card-title {
-    font-size: clamp(1.25rem, 4vw, 1.75rem);
+    font-size: var(--card-title-font-size);
     font-weight: 500;
     color: var(--primary-text-color);
     text-shadow:
@@ -267,7 +355,7 @@ body.dark-theme .theme-toggle::before {
     gap: clamp(0.5rem, 2vw, 1rem);
     background: var(--primary-background-color);
     border-radius: var(--border-radius);
-    font-size: clamp(0.875rem, 4vw, 1.5rem);
+    font-size: var(--button-label-font-size);
     font-weight: 500;
     color: var(--secondary-text-color);
     cursor: pointer;
@@ -351,10 +439,16 @@ body.dark-theme .button-checkbox:checked+.button-label {
 }
 
 .device-icon {
-    width: 4rem;
+    width: 2.5rem;
+    height: 2.5rem;
     color: var(--secondary-text-color);
-    font-size: 1.5rem;
     transition: color 0.3s ease;
+}
+
+.device-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
 }
 
 .device-icon.device-on {
@@ -363,18 +457,18 @@ body.dark-theme .button-checkbox:checked+.button-label {
 
 .device-since {
     color: var(--secondary-text-color);
-    font-size: 0.875rem;
+    font-size: var(--device-since-font-size);
 }
 
 .device-title {
-    font-size: 1.25rem;
+    font-size: var(--device-title-font-size);
     font-weight: 500;
     color: var(--primary-text-color);
 }
 
 .device-info {
     color: var(--secondary-text-color);
-    font-size: 0.875rem;
+    font-size: var(--device-info-font-size);
 }
 
 .device-footer {
@@ -482,27 +576,30 @@ body.dark-theme .switch::before {
 .indicator {
     display: flex;
     flex-direction: column;
-    gap: clamp(0.05rem, 0.25rem, 0.5rem);
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .indicator-title {
     text-transform: uppercase;
     color: var(--secondary-text-color);
+    font-size: var(--indicator-title-font-size);
 }
 
 .indicator-value {
-    font-size: 3rem;
+    font-size: var(--indicator-value-font-size);
     font-weight: 400;
     color: var(--primary-text-color);
 }
 
 .indicator-unit {
-    font-size: 1rem;
+    font-size: var(--indicator-unit-font-size);
     font-weight: 400;
     color: var(--secondary-text-color);
+    margin-left: 0.25rem;
 }
 
-/* Адаптивность для планшетов */
+/* Адаптивность для сетки устройств */
 @media (max-width: 768px) {
     .content {
         gap: 3rem;
@@ -517,21 +614,12 @@ body.dark-theme .switch::before {
         gap: 1rem;
     }
 
-    .time {
-        font-size: 5rem;
-    }
-
-    .today {
-        font-size: 2rem;
-    }
-
     /* 3 карточки в ряд для планшетов */
     .block-devices {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* Адаптивность для смартфонов */
 @media (max-width: 480px) {
     .content {
         gap: 2.5rem;
@@ -546,14 +634,6 @@ body.dark-theme .switch::before {
         gap: 0.75rem;
     }
 
-    .time {
-        font-size: 2.5rem;
-    }
-
-    .today {
-        font-size: 0.9rem;
-    }
-
     .card.camera {
         padding: 1rem;
         min-height: 150px;
@@ -562,6 +642,7 @@ body.dark-theme .switch::before {
     /* 2 карточки в ряд для смартфонов */
     .block-devices {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 }
 
