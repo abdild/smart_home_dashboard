@@ -49,16 +49,16 @@ body {
     /* 112px - седьмерной */
 
     /* Переменные для конкретных элементов */
-    --time-font-size: var(--font-size-7xl);
-    --today-font-size: var(--font-size-2xl);
-    --today-date-font-size: var(--font-size-2xl);
-    --today-weekday-font-size: var(--font-size-2xl);
+    --time-font-size: var(--font-size-5xl);
+    --today-date-font-size: var(--font-size-xl);
+    --today-weekday-font-size: var(--font-size-xl);
     --block-title-font-size: var(--font-size-xl);
     --card-title-font-size: var(--font-size-lg);
-    --device-title-font-size: var(--font-size-md);
-    --device-info-font-size: var(--font-size-sm);
+    --device-title-font-size: var(--font-size-base);
+    --device-info-font-size: var(--font-size-xs);
     --device-since-font-size: var(--font-size-xs);
     --button-label-font-size: var(--font-size-base);
+    --round-text-font-size: var(--font-size-sm);
     --indicator-value-font-size: var(--font-size-3xl);
     --indicator-unit-font-size: var(--font-size-base);
     --indicator-title-font-size: var(--font-size-xs);
@@ -81,6 +81,10 @@ body.light-theme {
 
     --icon-color-sun: #f39c12;
     --icon-color-moon: #f1c40f;
+    --icon-color-on: #00A86B;
+    --icon-color-off: #DC2626;
+    --icon-bg-color: #d1d9e650;
+    --icon-bg-color-on: #00A86B;
     --neumo-shadow-dark: #d1d9e6;
     --neumo-shadow-light: #ffffff;
 }
@@ -102,6 +106,10 @@ body.dark-theme {
 
     --icon-color-sun: #f39c12;
     --icon-color-moon: #f1c40f;
+    --icon-color-on: #4ADE80;
+    --icon-color-off: #F87171;
+    --icon-bg-color: #40485450;
+    --icon-bg-color-on: #4ADE80;
     --neumo-shadow-dark: #0f1215;
     --neumo-shadow-light: #2f3741;
 }
@@ -109,16 +117,16 @@ body.dark-theme {
 /* Адаптивность для планшетов */
 @media (min-width: 481px) and (max-width: 768px) {
     body {
-        --time-font-size: var(--font-size-5xl);
-        --today-font-size: var(--font-size-xl);
-        --today-date-font-size: var(--font-size-xl);
-        --today-weekday-font-size: var(--font-size-xl);
+        --time-font-size: var(--font-size-4xl);
+        --today-date-font-size: var(--font-size-lg);
+        --today-weekday-font-size: var(--font-size-lg);
         --block-title-font-size: var(--font-size-lg);
         --card-title-font-size: var(--font-size-md);
         --device-title-font-size: var(--font-size-base);
-        --device-info-font-size: var(--font-size-sm);
+        --device-info-font-size: var(--font-size-xs);
         --device-since-font-size: var(--font-size-xs);
         --button-label-font-size: var(--font-size-sm);
+        --round-text-font-size: var(--font-size-xs);
         --indicator-value-font-size: var(--font-size-2xl);
         --indicator-unit-font-size: var(--font-size-sm);
         --indicator-title-font-size: var(--font-size-xs);
@@ -129,25 +137,29 @@ body.dark-theme {
 @media (max-width: 480px) {
     body {
         --time-font-size: var(--font-size-2xl);
-        --today-font-size: var(--font-size-sm);
         --today-date-font-size: var(--font-size-sm);
         --today-weekday-font-size: var(--font-size-sm);
         --block-title-font-size: var(--font-size-sm);
         --card-title-font-size: var(--font-size-sm);
-        --device-title-font-size: var(--font-size-xs);
+        --device-title-font-size: var(--font-size-base);
         --device-info-font-size: var(--font-size-xs);
         --device-since-font-size: var(--font-size-xs);
         --button-label-font-size: var(--font-size-xs);
+        --round-text-font-size: var(--font-size-xs);
         --indicator-value-font-size: var(--font-size-lg);
         --indicator-unit-font-size: var(--font-size-xs);
         --indicator-title-font-size: var(--font-size-xs);
     }
 }
 
+.flex-right {
+    margin-left: auto;
+}
+
 .container {
     max-width: 1024px;
     margin: 0 auto;
-    padding: clamp(1rem, 3vw, 2rem);
+    padding: clamp(0.75rem, 1rem, 1.25rem);
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -174,7 +186,7 @@ body.dark-theme .header {
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-    padding: 1rem clamp(1rem, 3vw, 2rem);
+    padding: clamp(0.75rem, 1rem, 1.25rem);
 }
 
 /* Добавляем псевдоэлемент для плавного перехода фона при скролле */
@@ -199,7 +211,6 @@ body.dark-theme .header {
 
 .today {
     color: var(--secondary-text-color);
-    font-size: var(--today-font-size);
     font-weight: 400;
     text-align: right;
 }
@@ -214,23 +225,25 @@ body.dark-theme .header {
 
 /* Неоморфный переключатель темы */
 .theme-toggle {
-    width: 80px;
-    height: 38px;
-    border-radius: 80px;
+    width: 60px;
+    height: 31px;
+    border-radius: 30px;
     background: #EBF3FA;
     box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
     cursor: pointer;
     position: relative;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .theme-toggle::before {
     content: "";
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    top: 3px;
+    top: 4px;
     left: 4px;
     background: #e0e5ec;
     box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
@@ -239,15 +252,15 @@ body.dark-theme .header {
 }
 
 .theme-toggle.dark::before {
-    transform: translateX(40px);
+    transform: translateX(29px);
 }
 
 .theme-icon {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 9px;
-    left: 10px;
+    width: 18px;
+    height: 18px;
+    top: 7px;
+    left: 7px;
     z-index: 2;
     color: var(--icon-color-sun);
     transition: all 0.3s ease;
@@ -255,7 +268,7 @@ body.dark-theme .header {
 }
 
 .theme-toggle.dark .theme-icon {
-    left: 50px;
+    left: 36px;
     color: var(--icon-color-moon);
 }
 
@@ -272,6 +285,7 @@ body.dark-theme .theme-toggle::before {
 
 /* Контент страницы */
 .content {
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
     gap: 3rem;
@@ -282,7 +296,7 @@ body.dark-theme .theme-toggle::before {
 .block {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(1rem, 1.5rem, 2rem);
 }
 
 .block-title {
@@ -309,7 +323,7 @@ body.dark-theme .theme-toggle::before {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 3vw, 2rem);
+    gap: clamp(0.75rem, 1rem, 1.25rem);
 }
 
 .card.camera {
@@ -317,6 +331,9 @@ body.dark-theme .theme-toggle::before {
     min-height: 200px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
 }
 
 .card-title {
@@ -330,10 +347,13 @@ body.dark-theme .theme-toggle::before {
     letter-spacing: 0.5px;
 }
 
-/* Стили для чекбоксов-кнопок сценариев */
+/* Стили для обычных чекбоксов-кнопок */
 .button-item {
     display: flex;
     width: 100%;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .button-checkbox {
@@ -379,7 +399,7 @@ body.dark-theme .theme-toggle::before {
 }
 
 /* Активное состояние (когда чекбокс выбран) */
-.button-checkbox:checked+.button-label {
+.button-checkbox:checked + .button-label {
     box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
         inset -3px -3px 6px var(--neumo-shadow-light);
     color: var(--success-color);
@@ -396,29 +416,129 @@ body.dark-theme .button-label:hover {
         -3px -3px 6px var(--neumo-shadow-light);
 }
 
-body.dark-theme .button-checkbox:checked+.button-label {
+body.dark-theme .button-checkbox:checked + .button-label {
     box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
         inset -3px -3px 6px var(--neumo-shadow-light);
 }
 
-/* Блок сценариев */
+/* Блок с круглыми кнопками */
+.block-round-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* gap: 2rem; */
+    /* display: grid;
+    grid-template-columns: repeat(4, 1fr); */
+    gap: clamp(1rem, 2rem, 3rem);
+}
+
+/* Стили для круглых чекбоксов-кнопок */
+.round-button-item {
+    display: flex;
+    width: 5rem;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.round-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.round-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.round-icon {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: var(--primary-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary-text-color);
+    box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
+                -5px -5px 10px var(--neumo-shadow-light);
+    transition: all 0.2s ease;
+}
+
+.round-icon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: currentColor;
+}
+
+.round-text {
+    font-size: var(--round-text-font-size);
+    font-weight: 500;
+    color: var(--secondary-text-color);
+    text-align: center;
+    transition: color 0.2s ease;
+}
+
+/* Наведение */
+.round-label:hover .round-icon {
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+                -3px -3px 6px var(--neumo-shadow-light);
+}
+
+/* Активное состояние (когда чекбокс выбран) */
+.round-checkbox:checked + .round-label .round-icon {
+    box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
+                inset -3px -3px 6px var(--neumo-shadow-light);
+    color: var(--success-color);
+}
+
+.round-checkbox:checked + .round-label .round-text {
+    color: var(--success-color);
+}
+
+/* Для темной темы */
+body.dark-theme .round-icon {
+    box-shadow: 5px 5px 10px var(--neumo-shadow-dark),
+                -5px -5px 10px var(--neumo-shadow-light);
+}
+
+body.dark-theme .round-label:hover .round-icon {
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+                -3px -3px 6px var(--neumo-shadow-light);
+}
+
+body.dark-theme .round-checkbox:checked + .round-label .round-icon {
+    box-shadow: inset 3px 3px 6px var(--neumo-shadow-dark),
+                inset -3px -3px 6px var(--neumo-shadow-light);
+}
+
+/* Блок с обычными кнопками */
 .block-buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1rem, 3vw, 2rem);
+    gap: clamp(0.75rem, 1rem, 1.25rem);
 }
 
 /* Стили для устройств */
 .block-devices {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: clamp(1rem, 3vw, 2rem);
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(0.75rem, 1rem, 1.25rem);
 }
 
 .device {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     padding: 1rem;
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
@@ -434,6 +554,7 @@ body.dark-theme .button-checkbox:checked+.button-label {
 
 .device-header {
     display: flex;
+    gap: 1rem;
     justify-content: space-between;
     align-items: center;
 }
@@ -458,11 +579,13 @@ body.dark-theme .button-checkbox:checked+.button-label {
 .device-since {
     color: var(--secondary-text-color);
     font-size: var(--device-since-font-size);
+    text-align: right;
+    line-height: 1.2;
 }
 
 .device-title {
     font-size: var(--device-title-font-size);
-    font-weight: 500;
+    font-weight: 400;
     color: var(--primary-text-color);
 }
 
@@ -473,15 +596,47 @@ body.dark-theme .button-checkbox:checked+.button-label {
 
 .device-footer {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 0.5rem;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/* Неоморфный переключатель (Switch) - идентичен theme-toggle по структуре */
+/* Кнопка девайса */
+.device-button-bg {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--icon-bg-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 3px 3px 6px var(--neumo-shadow-dark),
+                -3px -3px 6px var(--neumo-shadow-light);
+}
+
+.device-button-bg.device-on {
+    background-color: var(--icon-bg-color-on);
+}
+
+.device-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--primary-text-color);
+}
+
+.device-button svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+/* Неоморфный переключатель (Switch) - стилизован под theme-toggle */
 .switch {
-    width: 80px;
-    height: 38px;
-    border-radius: 80px;
+    width: 60px;
+    height: 31px;
+    border-radius: 30px;
     background: #EBF3FA;
     box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;
     cursor: pointer;
@@ -489,20 +644,21 @@ body.dark-theme .button-checkbox:checked+.button-label {
     transition: all 0.3s ease;
     display: inline-block;
     outline: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .switch:focus-visible {
-    outline: 2px solid var(--info-color);
-    outline-offset: 2px;
+    outline: none;
 }
 
 .switch::before {
     content: "";
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    top: 3px;
+    top: 4px;
     left: 4px;
     background: #e0e5ec;
     box-shadow: 3px 3px 6px #a3b1c6, -3px -3px 6px #ffffff;
@@ -511,47 +667,34 @@ body.dark-theme .button-checkbox:checked+.button-label {
 }
 
 .switch.on::before {
-    transform: translateX(40px);
+    transform: translateX(29px);
 }
 
-.switch .icon-off,
-.switch .icon-on {
+.switch .switch-icon {
     position: absolute;
+    width: 18px;
+    height: 18px;
     top: 7px;
-    width: 24px;
-    height: 24px;
+    left: 7px;
     z-index: 2;
+    color: var(--icon-color-off);
     transition: all 0.3s ease;
+    pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.switch .icon-off svg,
-.switch .icon-on svg {
-    width: 18px;
-    height: 18px;
+.switch .switch-icon svg {
+    width: 100%;
+    height: 100%;
     fill: currentColor;
+    stroke: currentColor;
 }
 
-.switch .icon-off {
-    left: 8px;
-    color: var(--danger-color);
-    opacity: 1;
-}
-
-.switch .icon-on {
-    right: 8px;
-    color: var(--success-color);
-    opacity: 0;
-}
-
-.switch.on .icon-off {
-    opacity: 0;
-}
-
-.switch.on .icon-on {
-    opacity: 1;
+.switch.on .switch-icon {
+    left: 36px;
+    color: var(--icon-color-on);
 }
 
 /* Для темной темы */
@@ -570,7 +713,7 @@ body.dark-theme .switch::before {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: clamp(1rem, 3vw, 2rem);
+    gap: clamp(0.75rem, 1rem, 1.25rem);
 }
 
 .indicator {
@@ -599,6 +742,31 @@ body.dark-theme .switch::before {
     margin-left: 0.25rem;
 }
 
+/* Кнопка дополнительных свойств */
+.setting-button-item {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--icon-bg-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.setting-button {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--primary-text-color);
+}
+
+.setting-button svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
 /* Адаптивность для сетки устройств */
 @media (max-width: 768px) {
     .content {
@@ -614,9 +782,14 @@ body.dark-theme .switch::before {
         gap: 1rem;
     }
 
-    /* 3 карточки в ряд для планшетов */
+    /* 4 карточки в ряд для планшетов */
     .block-devices {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* 3 круглые кнопки в ряд для планшетов */
+    .block-round-buttons {
+        /* grid-template-columns: repeat(3, 1fr); */
     }
 }
 
@@ -642,7 +815,21 @@ body.dark-theme .switch::before {
     /* 2 карточки в ряд для смартфонов */
     .block-devices {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+    }
+
+    /* 2 круглые кнопки в ряд для смартфонов */
+    .block-round-buttons {
+        /* grid-template-columns: repeat(2, 1fr); */
+    }
+
+    .round-icon {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .round-icon svg {
+        width: 2rem;
+        height: 2rem;
     }
 }
 
@@ -650,5 +837,9 @@ body.dark-theme .switch::before {
 @media (max-width: 360px) {
     .block-devices {
         grid-template-columns: 1fr;
+    }
+    
+    .block-round-buttons {
+        /* grid-template-columns: 1fr; */
     }
 }

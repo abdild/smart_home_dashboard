@@ -105,21 +105,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (deviceElement) {
                 updateDeviceIcon(deviceElement, isOn);
             }
-
-            // Здесь можно добавить логику для Home Assistant
-            // Например:
-            // if (window.hassConnection) {
-            //     hassConnection.then(({ auth, conn }) => {
-            //         conn.sendMessage({
-            //             type: 'call_service',
-            //             domain: 'switch',
-            //             service: isOn ? 'turn_on' : 'turn_off',
-            //             service_data: {
-            //                 entity_id: `switch.${deviceName.toLowerCase().replace(/\s+/g, '_')}`
-            //             }
-            //         });
-            //     });
-            // }
         };
     }
 
@@ -158,11 +143,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Обработчики для чекбоксов сценариев
+    // Обработчики для обычных чекбоксов сценариев
     const scenarioCheckboxes = document.querySelectorAll('.button-checkbox');
     scenarioCheckboxes.forEach((checkbox, index) => {
         checkbox.addEventListener('change', function () {
-            console.log(`Сценарий ${index + 1} ${this.checked ? 'включен' : 'выключен'}`);
+            console.log(`Обычная кнопка ${index + 1}: ${this.checked ? 'включена' : 'выключена'}`);
+        });
+    });
+
+    // Обработчики для круглых чекбоксов
+    const roundCheckboxes = document.querySelectorAll('.round-checkbox');
+    roundCheckboxes.forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function () {
+            console.log(`Круглая кнопка ${index + 1}: ${this.checked ? 'включена' : 'выключена'}`);
         });
     });
 });
